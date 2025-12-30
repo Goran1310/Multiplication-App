@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>🎮 Multiplication Master</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Multiplication Master</h1>
+        
+        <!-- Score and Timer Display -->
+        <div class="stats">
+            <div class="score-box">
+                <h2 id="score">Score: 0</h2>
+                <div id="stars" class="stars"></div>
+            </div>
+            <div class="timer-box">
+                <h2 id="timer"></h2>
+            </div>
+        </div>
+
+        <!-- Number Selection -->
+        <div class="number-selection">
+            <h3>Choose your times table:</h3>
+            <div class="number-buttons">
+                <button class="num-btn" onclick="selectNumber(1)">1</button>
+                <button class="num-btn" onclick="selectNumber(2)">2</button>
+                <button class="num-btn" onclick="selectNumber(3)">3</button>
+                <button class="num-btn" onclick="selectNumber(4)">4</button>
+                <button class="num-btn active" onclick="selectNumber(5)">5</button>
+                <button class="num-btn" onclick="selectNumber(6)">6</button>
+                <button class="num-btn" onclick="selectNumber(7)">7</button>
+                <button class="num-btn" onclick="selectNumber(8)">8</button>
+                <button class="num-btn" onclick="selectNumber(9)">9</button>
+                <button class="num-btn" onclick="selectNumber(10)">10</button>
+            </div>
+        </div>
+
+        <!-- Question Area -->
+        <div class="question-area">
+            <p id="question" class="question">5 × 1 = ?</p>
+        </div>
+
+        <!-- Answer Input -->
+        <div class="answer-area">
+            <input 
+                type="number" 
+                id="answer" 
+                placeholder="Type your answer..."
+                onkeypress="if(event.key === 'Enter') checkAnswer()"
+                autofocus
+            />
+            <button class="check-btn" onclick="checkAnswer()">✓ Check Answer</button>
+        </div>
+
+        <!-- Result and Hint -->
+        <div class="feedback-area">
+            <p id="result" class="result"></p>
+            <p id="hint" class="hint"></p>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="controls">
+            <button class="control-btn timer-btn" onclick="startTimer()">⏱️ Timer Mode (30s)</button>
+            <button class="control-btn reset-btn" onclick="resetGame()">🔄 New Game</button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>🎯 How to Play:</h3>
+            <ul>
+                <li>🔢 Pick your times table</li>
+                <li>✏️ Answer the questions</li>
+                <li>⭐ Get a star every 5 correct answers!</li>
+                <li>⏱️ Try timer mode for extra challenge</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

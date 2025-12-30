@@ -1,0 +1,608 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #667eea;
+    font-size: 3em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Stats Area */
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.score-box, .timer-box {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    flex: 1;
+    text-align: center;
+}
+
+.timer-box {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stats h2 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.stars {
+    font-size: 2em;
+    margin-top: 10px;
+    min-height: 40px;
+}
+
+/* Number Selection */
+.number-selection {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.number-selection h3 {
+    color: #764ba2;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.number-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.num-btn {
+    width: 60px;
+    height: 60px;
+    border: 3px solid #667eea;
+    background: white;
+    color: #667eea;
+    font-size: 1.8em;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.num-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.1);
+}
+
+.num-btn.active {
+    background: #667eea;
+    color: white;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Question Area */
+.question-area {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    padding: 40px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.question {
+    font-size: 3.5em;
+    color: #764ba2;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Answer Area */
+.answer-area {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#answer {
+    flex: 1;
+    padding: 20px;
+    font-size: 2em;
+    border: 4px solid #667eea;
+    border-radius: 15px;
+    text-align: center;
+    font-family: inherit;
+}
+
+#answer:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.check-btn {
+    padding: 20px 40px;
+    font-size: 1.8em;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.check-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(17, 153, 142, 0.3);
+}
+
+.check-btn:active {
+    transform: scale(0.98);
+}
+
+/* Feedback Area */
+.feedback-area {
+    min-height: 120px;
+    margin-bottom: 30px;
+}
+
+.result {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.result.correct {
+    background: #d4edda;
+    color: #155724;
+}
+
+.result.wrong {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.hint {
+    font-size: 1.3em;
+    color: #764ba2;
+    text-align: center;
+    background: #f0e6ff;
+    padding: 15px;
+    border-radius: 15px;
+    border-left: 5px solid #667eea;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.control-btn {
+    flex: 1;
+    padding: 15px;
+    font-size: 1.3em;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    color: white;
+}
+
+.timer-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.reset-btn {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.control-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+/* Instructions */
+.instructions {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid #667eea;
+}
+
+.instructions h3 {
+    color: #764ba2;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.instructions ul {
+    list-style: none;
+    padding: 0;
+}
+
+.instructions li {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+/* Animations */
+@keyframes celebrate {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.celebrate {
+    animation: celebrate 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 2.2em;
+        margin-bottom: 20px;
+    }
+
+    /* Stats - Stack vertically on mobile */
+    .stats {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .score-box, .timer-box {
+        padding: 15px;
+    }
+
+    .stats h2 {
+        font-size: 1.6em;
+    }
+
+    .stars {
+        font-size: 1.8em;
+        min-height: 35px;
+    }
+
+    /* Number selection - Better touch targets */
+    .number-selection h3 {
+        font-size: 1.3em;
+        margin-bottom: 12px;
+    }
+
+    .number-buttons {
+        gap: 8px;
+    }
+
+    .num-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6em;
+        border-width: 2px;
+    }
+
+    /* Question area */
+    .question-area {
+        padding: 30px 20px;
+        margin-bottom: 25px;
+    }
+
+    .question {
+        font-size: 2.8em;
+    }
+
+    /* Answer area - Stack on very small screens */
+    .answer-area {
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    #answer {
+        font-size: 1.8em;
+        padding: 18px;
+        border-width: 3px;
+    }
+
+    .check-btn {
+        font-size: 1.5em;
+        padding: 18px 30px;
+        min-width: 120px;
+    }
+
+    /* Feedback */
+    .result {
+        font-size: 1.6em;
+        padding: 12px;
+    }
+
+    .hint {
+        font-size: 1.1em;
+        padding: 12px;
+    }
+
+    /* Controls - Stack vertically */
+    .controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .control-btn {
+        padding: 15px;
+        font-size: 1.2em;
+    }
+
+    /* Instructions - Smaller text */
+    .instructions {
+        padding: 20px;
+    }
+
+    .instructions h3 {
+        font-size: 1.3em;
+        margin-bottom: 12px;
+    }
+
+    .instructions li {
+        font-size: 1.1em;
+        margin-bottom: 8px;
+    }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        padding: 20px 15px;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    /* Stats */
+    .stats {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .score-box, .timer-box {
+        padding: 12px;
+    }
+
+    .stats h2 {
+        font-size: 1.4em;
+    }
+
+    .stars {
+        font-size: 1.5em;
+        min-height: 30px;
+    }
+
+    /* Number buttons - Smaller on tiny screens */
+    .number-selection {
+        margin-bottom: 20px;
+    }
+
+    .number-selection h3 {
+        font-size: 1.1em;
+    }
+
+    .number-buttons {
+        gap: 6px;
+    }
+
+    .num-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4em;
+    }
+
+    /* Question */
+    .question-area {
+        padding: 25px 15px;
+        margin-bottom: 20px;
+    }
+
+    .question {
+        font-size: 2.2em;
+    }
+
+    /* Answer area - Full width stack */
+    .answer-area {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #answer {
+        font-size: 1.6em;
+        padding: 15px;
+        width: 100%;
+    }
+
+    .check-btn {
+        font-size: 1.4em;
+        padding: 15px;
+        width: 100%;
+    }
+
+    /* Feedback */
+    .feedback-area {
+        min-height: 100px;
+    }
+
+    .result {
+        font-size: 1.4em;
+        padding: 10px;
+    }
+
+    .hint {
+        font-size: 1em;
+        padding: 10px;
+        border-left-width: 3px;
+    }
+
+    /* Controls */
+    .controls {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .control-btn {
+        padding: 12px;
+        font-size: 1.1em;
+    }
+
+    /* Instructions */
+    .instructions {
+        padding: 15px;
+    }
+
+    .instructions h3 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .instructions li {
+        font-size: 1em;
+        margin-bottom: 6px;
+    }
+}
+
+/* Landscape mode optimization for mobile */
+@media (max-width: 900px) and (orientation: landscape) {
+    .container {
+        padding: 15px 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .stats {
+        flex-direction: row;
+        margin-bottom: 15px;
+    }
+
+    .question-area {
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .question {
+        font-size: 2em;
+    }
+
+    .answer-area {
+        margin-bottom: 15px;
+    }
+
+    .feedback-area {
+        min-height: 80px;
+    }
+
+    .controls {
+        flex-direction: row;
+        margin-bottom: 15px;
+    }
+
+    .instructions {
+        padding: 15px;
+    }
+
+    .instructions h3 {
+        font-size: 1.2em;
+    }
+
+    .instructions li {
+        font-size: 0.95em;
+    }
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media screen and (max-width: 768px) {
+    input[type="number"] {
+        font-size: 16px !important;
+    }
+}
+
+/* Better touch feedback for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .num-btn:active,
+    .check-btn:active,
+    .control-btn:active {
+        transform: scale(0.95);
+        transition: transform 0.1s;
+    }
+
+    /* Larger touch targets */
+    .num-btn {
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    button {
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+    }
+}
