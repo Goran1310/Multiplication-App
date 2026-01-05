@@ -1,5 +1,6 @@
 // Game State
-let selectedNumber = 5;
+let selectedNumbers = [5]; // Array to store multiple selected numbers
+let currentNumber = 5; // The number being used in current question
 let secondNumber = 1;
 let score = 0;
 let timeLeft = 30;
@@ -70,25 +71,37 @@ function playWrongSound() {
     }
 }
 
-// Select a times table number
+// Select a times table number (toggle selection)
 function selectNumber(num) {
-    selectedNumber = num;
+    const index = selectedNumbers.indexOf(num);
     
-    // Update button styling
-    document.querySelectorAll('.num-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
+    if (index > -1) {
+        // Number is already selected, remove it (unless it's the last one)
+        if (selectedNumbers.length > 1) {
+            selectedNumbers.splice(index, 1);
+            event.target.classList.remove('active');
+        }
+    } else {
+        // Number not selected, add it
+        selectedNumbers.push(num);
+        event.target.classList.add('active');
+    }
     
-    // Reset game with new number
-    resetGame();
+    // Sort for consistent display
+    selectedNumbers.sort((a, b) => a - b);
+    
+    // Generate new question with updated selection
+    generateQuestion();
 }
 
 // Generate a new question
 function generateQuestion() {
+    // Pick a random number from the selected numbers
+    currentNumber = selectedNumbers[Math.floor(Math.random() * selectedNumbers.length)];
     secondNumber = Math.floor(Math.random() * 10) + 1;
+    
     document.getElementById("question").innerText = 
-        `${selectedNumber} × ${secondNumber} = ?`;
+        `${currentNumber} × ${secondNumber} = ?`;
     document.getElementById("answer").value = "";
     document.getElementById("hint").innerText = "";
     
@@ -104,7 +117,7 @@ function generateQuestion() {
 // Check the user's answer
 function checkAnswer() {
     const userAnswer = Number(document.getElementById("answer").value);
-    const correctAnswer = selectedNumber * secondNumber;
+    const correctAnswer = currentNumber * secondNumber;
     const resultElement = document.getElementById("result");
     
     // Ignore empty answers
@@ -159,7 +172,7 @@ function updateScore() {
 function showHint() {
     let hint = "";
     for (let i = 0; i < secondNumber; i++) {
-        hint += selectedNumber;
+        hint += currentNumber;
         if (i < secondNumber - 1) {
             hint += " + ";
         }
@@ -168,7 +181,7 @@ function showHint() {
     const totalHint = hint.split(" + ").reduce((sum, num) => sum + Number(num), 0);
     
     document.getElementById("hint").innerText = 
-        `💡 Hint: ${selectedNumber} × ${secondNumber} means ${secondNumber} groups of ${selectedNumber}\n` +
+        `💡 Hint: ${currentNumber} × ${secondNumber} means ${secondNumber} groups of ${currentNumber}\n` +
         `That's: ${hint} = ${totalHint}`;
 }
 
