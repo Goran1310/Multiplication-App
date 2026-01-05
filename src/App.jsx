@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 
 // Import all the apps
@@ -7,6 +7,9 @@ import AdditionTrainer from './apps/AdditionTrainer'
 import DeductionTrainer from './apps/DeductionTrainer'
 import MathQuiz from './apps/MathQuiz'
 import Flashcards from './apps/Flashcards'
+
+// App version for localStorage management
+const APP_VERSION = "1.2.0"
 
 const apps = [
   {
@@ -45,6 +48,26 @@ function App() {
   const [currentAppId, setCurrentAppId] = useState('multiplication')
   const currentApp = apps.find(app => app.id === currentAppId)
   const CurrentAppComponent = currentApp.component
+
+  // Check and clear old localStorage data when version changes
+  useEffect(() => {
+    const storedVersion = localStorage.getItem('appVersion')
+    
+    if (storedVersion !== APP_VERSION) {
+      console.log(`App version changed from ${storedVersion || 'none'} to ${APP_VERSION}. Clearing old data...`)
+      
+      // Clear all localStorage keys except currentAppId preference
+      const keysToKeep = ['currentAppId']
+      Object.keys(localStorage).forEach(key => {
+        if (!keysToKeep.includes(key)) {
+          localStorage.removeItem(key)
+        }
+      })
+      
+      // Set new version
+      localStorage.setItem('appVersion', APP_VERSION)
+    }
+  }, [])
 
   return (
     <div className="main-container">
