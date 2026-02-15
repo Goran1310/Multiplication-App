@@ -11,6 +11,7 @@ const MathQuiz = () => {
   const [total, setTotal] = useState(0)
   const [result, setResult] = useState({ message: '', type: '' })
   const inputRef = useRef(null)
+  const audioContextRef = useRef(null)
 
   const operations = {
     addition: { symbol: '+', label: '➕ Addition' },
@@ -20,9 +21,70 @@ const MathQuiz = () => {
     mixed: { symbol: 'mix', label: '🎲 Mixed' }
   }
 
+  // Initialize audio context
+  useEffect(() => {
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    audioContextRef.current = new AudioContext()
+    
+    // Enable audio on first interaction
+    const initAudio = () => {
+      if (audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume()
+      }
+    }
+    document.addEventListener('click', initAudio, { once: true })
+    
+    return () => {
+      document.removeEventListener('click', initAudio)
+    }
+  }, [])
+
   useEffect(() => {
     generateQuestion()
   }, [operation])
+
+  // Play sounds
+  const playCorrectSound = () => {
+    try {
+      const ctx = audioContextRef.current
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      
+      osc.frequency.value = 523.25
+      osc.type = 'sine'
+      gain.gain.setValueAtTime(0.3, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5)
+      
+      osc.start(ctx.currentTime)
+      osc.stop(ctx.currentTime + 0.5)
+    } catch (e) {
+      console.log('Sound not available')
+    }
+  }
+
+  const playWrongSound = () => {
+    try {
+      const ctx = audioContextRef.current
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      
+      osc.frequency.value = 200
+      osc.type = 'sawtooth'
+      gain.gain.setValueAtTime(0.3, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3)
+      
+      osc.start(ctx.currentTime)
+      osc.stop(ctx.currentTime + 0.3)
+    } catch (e) {
+      console.log('Sound not available')
+    }
+  }
 
   const generateQuestion = () => {
     let op = operation === 'mixed' 
@@ -78,10 +140,12 @@ const MathQuiz = () => {
     setTotal(total + 1)
 
     if (Math.abs(answer - correct) < 0.01) {
+      playCorrectSound()
       setScore(score + 1)
       setResult({ message: '🎉 Correct!', type: 'correct' })
       setTimeout(generateQuestion, 1500)
     } else {
+      playWrongSound()
       setResult({ 
         message: `❌ Wrong! The answer was ${correct}`, 
         type: 'wrong' 

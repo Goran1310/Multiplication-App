@@ -11,16 +11,78 @@ const DeductionTrainer = () => {
   const [streak, setStreak] = useState(0)
   const [showHint, setShowHint] = useState(false)
   const inputRef = useRef(null)
+  const audioContextRef = useRef(null)
 
   const difficultyLevels = {
     easy: { max: 10, label: '🟢 Easy (1-10)' },
-    medium: { max: 50, label: '🟡 Medium (1-50)' },
+    medium: { max: 0, label: '🟡 Medium (1-50)' },
     hard: { max: 100, label: '🔴 Hard (1-100)' }
   }
+
+  // Initialize audio context
+  useEffect(() => {
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    audioContextRef.current = new AudioContext()
+    
+    // Enable audio on first interaction
+    const initAudio = () => {
+      if (audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume()
+      }
+    }
+    document.addEventListener('click', initAudio, { once: true })
+    
+    return () => {
+      document.removeEventListener('click', initAudio)
+    }
+  }, [])
 
   useEffect(() => {
     generateQuestion()
   }, [difficulty])
+
+  // Play sounds
+  const playCorrectSound = () => {
+    try {
+      const ctx = audioContextRef.current
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      
+      osc.frequency.value = 523.25
+      osc.type = 'sine'
+      gain.gain.setValueAtTime(0.3, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5)
+      
+      osc.start(ctx.currentTime)
+      osc.stop(ctx.currentTime + 0.5)
+    } catch (e) {
+      console.log('Sound not available')
+    }
+  }
+
+  const playWrongSound = () => {
+    try {
+      const ctx = audioContextRef.current
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      
+      osc.frequency.value = 200
+      osc.type = 'sawtooth'
+      gain.gain.setValueAtTime(0.3, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3)
+      
+      osc.start(ctx.currentTime)
+      osc.stop(ctx.currentTime + 0.3)
+    } catch (e) {
+      console.log('Sound not available')
+    }
+  }
 
   const generateQuestion = () => {
     const max = difficultyLevels[difficulty].max
@@ -42,11 +104,13 @@ const DeductionTrainer = () => {
     const answer = Number(userAnswer)
 
     if (answer === correct) {
+      playCorrectSound()
       setScore(score + 1)
       setStreak(streak + 1)
       setResult({ message: '🎉 Correct!', type: 'correct' })
       setTimeout(generateQuestion, 1500)
     } else {
+      playWrongSound()
       setStreak(0)
       setResult({ 
         message: `❌ Wrong! The answer was ${correct}`, 
