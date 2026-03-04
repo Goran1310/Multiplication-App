@@ -12,6 +12,7 @@ const MultiplicationMaster = () => {
   const [result, setResult] = useState({ message: '', type: '' })
   const [hint, setHint] = useState('')
   const [stars, setStars] = useState(0)
+  const [isAnswerLocked, setIsAnswerLocked] = useState(false)
   
   const audioContextRef = useRef(null)
   const timerIntervalRef = useRef(null)
@@ -96,6 +97,7 @@ const MultiplicationMaster = () => {
     setUserAnswer('')
     setResult({ message: '', type: '' })
     setHint('')
+    setIsAnswerLocked(false)
     
     answerInputRef.current?.focus()
   }
@@ -114,12 +116,13 @@ const MultiplicationMaster = () => {
 
   // Check answer
   const checkAnswer = () => {
-    if (userAnswer === '') return
+    if (isAnswerLocked || userAnswer === '') return
 
     const correct = currentNumber * secondNumber
     const answer = Number(userAnswer)
 
     if (answer === correct) {
+      setIsAnswerLocked(true)
       playCorrectSound()
       setResult({ message: '🎉 Correct! Great job!', type: 'correct' })
       
@@ -250,10 +253,15 @@ const MultiplicationMaster = () => {
           type="number"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && checkAnswer()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.repeat) {
+              checkAnswer()
+            }
+          }}
           placeholder="Type your answer..."
+          disabled={isAnswerLocked}
         />
-        <button className="check-btn" onClick={checkAnswer}>
+        <button className="check-btn" onClick={checkAnswer} disabled={isAnswerLocked}>
           ✓ Check Answer
         </button>
       </div>

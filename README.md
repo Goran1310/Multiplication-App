@@ -153,7 +153,52 @@ Use [uiGradients](https://uigradients.com/) to find beautiful color combinations
 - Click "New Game" to reset
 - Refresh the page (F5)
 
-## 📄 License
+## � Deployment
+
+### Netlify Deployment
+
+This app is deployed on Netlify. Here's what you need to know:
+
+**Important Lesson Learned - Vite Permission Error Fix**
+
+If you encounter `sh: 1: vite: Permission denied` errors during Netlify builds, the solution is to execute Vite directly with Node.js instead of using the binary wrapper:
+
+**In `package.json`:**
+```json
+"scripts": {
+  "build": "node node_modules/vite/bin/vite.js build"
+}
+```
+
+**Why this works:**
+- The `vite` command is a shell wrapper that may lack execute permissions on Linux-based CI/CD systems
+- `node` directly executes the JavaScript file, bypassing permission requirements
+- Node.js always has proper permissions in Netlify's build environment
+
+**Alternative approaches that DON'T work:**
+- ❌ `vite build` - Permission denied error
+- ❌ `npx vite build` - Still triggers permission error
+- ❌ Changing file permissions - Not possible in Netlify environment
+
+**Netlify Configuration (`netlify.toml`):**
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+```
+
+**Deployment Steps:**
+1. Connect your GitHub repository to Netlify
+2. Netlify auto-detects the build settings from `netlify.toml`
+3. Push changes to trigger automatic deployment
+4. Build completes successfully with the direct Node.js execution method
+
+This solution is applicable to any Vite project deployed on Netlify or similar CI/CD platforms that may have restrictive file permissions.
+
+## �📄 License
 
 Free to use, modify, and share! Perfect for:
 - 🏫 Teachers

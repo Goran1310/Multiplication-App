@@ -9,6 +9,7 @@ const AdditionTrainer = () => {
   const [score, setScore] = useState(0)
   const [result, setResult] = useState({ message: '', type: '' })
   const [streak, setStreak] = useState(0)
+  const [isAnswerLocked, setIsAnswerLocked] = useState(false)
   const inputRef = useRef(null)
   const audioContextRef = useRef(null)
 
@@ -89,16 +90,18 @@ const AdditionTrainer = () => {
     setNum2(Math.floor(Math.random() * max) + 1)
     setUserAnswer('')
     setResult({ message: '', type: '' })
+    setIsAnswerLocked(false)
     inputRef.current?.focus()
   }
 
   const checkAnswer = () => {
-    if (userAnswer === '') return
+    if (isAnswerLocked || userAnswer === '') return
 
     const correct = num1 + num2
     const answer = Number(userAnswer)
 
     if (answer === correct) {
+      setIsAnswerLocked(true)
       playCorrectSound()
       setScore(score + 1)
       setStreak(streak + 1)
@@ -156,10 +159,15 @@ const AdditionTrainer = () => {
           type="number"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && checkAnswer()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.repeat) {
+              checkAnswer()
+            }
+          }}
           placeholder="Type answer..."
+          disabled={isAnswerLocked}
         />
-        <button className="check-btn" onClick={checkAnswer}>
+        <button className="check-btn" onClick={checkAnswer} disabled={isAnswerLocked}>
           ✓ Check
         </button>
       </div>

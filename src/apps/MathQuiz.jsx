@@ -10,6 +10,7 @@ const MathQuiz = () => {
   const [score, setScore] = useState(0)
   const [total, setTotal] = useState(0)
   const [result, setResult] = useState({ message: '', type: '' })
+  const [isAnswerLocked, setIsAnswerLocked] = useState(false)
   const inputRef = useRef(null)
   const audioContextRef = useRef(null)
 
@@ -118,6 +119,7 @@ const MathQuiz = () => {
     setNum2(n2)
     setUserAnswer('')
     setResult({ message: '', type: '' })
+    setIsAnswerLocked(false)
     inputRef.current?.focus()
   }
 
@@ -132,7 +134,7 @@ const MathQuiz = () => {
   }
 
   const checkAnswer = () => {
-    if (userAnswer === '') return
+    if (isAnswerLocked || userAnswer === '') return
 
     const correct = calculateAnswer()
     const answer = Number(userAnswer)
@@ -140,6 +142,7 @@ const MathQuiz = () => {
     setTotal(total + 1)
 
     if (Math.abs(answer - correct) < 0.01) {
+      setIsAnswerLocked(true)
       playCorrectSound()
       setScore(score + 1)
       setResult({ message: '🎉 Correct!', type: 'correct' })
@@ -194,10 +197,15 @@ const MathQuiz = () => {
           step="any"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && checkAnswer()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.repeat) {
+              checkAnswer()
+            }
+          }}
           placeholder="Type answer..."
+          disabled={isAnswerLocked}
         />
-        <button className="check-btn" onClick={checkAnswer}>
+        <button className="check-btn" onClick={checkAnswer} disabled={isAnswerLocked}>
           ✓ Check
         </button>
       </div>
