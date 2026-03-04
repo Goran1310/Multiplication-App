@@ -44,6 +44,13 @@ const MultiplicationMaster = () => {
     generateQuestion()
   }, [])
 
+  // Auto-focus input whenever it becomes enabled (after each question)
+  useEffect(() => {
+    if (!isAnswerLocked) {
+      answerInputRef.current?.focus()
+    }
+  }, [isAnswerLocked])
+
   // Play sounds
   const playCorrectSound = () => {
     try {
@@ -98,8 +105,6 @@ const MultiplicationMaster = () => {
     setResult({ message: '', type: '' })
     setHint('')
     setIsAnswerLocked(false)
-    
-    answerInputRef.current?.focus()
   }
 
   // Toggle number selection
@@ -140,6 +145,7 @@ const MultiplicationMaster = () => {
       playWrongSound()
       setResult({ message: '❌ Try again!', type: 'wrong' })
       showHint()
+      answerInputRef.current?.focus()
     }
   }
 
@@ -247,7 +253,7 @@ const MultiplicationMaster = () => {
       </div>
 
       {/* Answer Input */}
-      <div className="answer-area">
+      <div className="answer-area" onClick={() => answerInputRef.current?.focus()}>
         <input
           ref={answerInputRef}
           type="number"

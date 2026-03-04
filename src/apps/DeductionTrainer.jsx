@@ -42,6 +42,13 @@ const DeductionTrainer = () => {
     generateQuestion()
   }, [difficulty])
 
+  // Auto-focus input whenever it becomes enabled (after each question)
+  useEffect(() => {
+    if (!isAnswerLocked) {
+      inputRef.current?.focus()
+    }
+  }, [isAnswerLocked])
+
   // Play sounds
   const playCorrectSound = () => {
     try {
@@ -96,7 +103,6 @@ const DeductionTrainer = () => {
     setResult({ message: '', type: '' })
     setShowHint(false)
     setIsAnswerLocked(false)
-    inputRef.current?.focus()
   }
 
   const checkAnswer = () => {
@@ -120,6 +126,7 @@ const DeductionTrainer = () => {
         type: 'wrong' 
       })
       setShowHint(true)
+      inputRef.current?.focus()
     }
   }
 
@@ -164,7 +171,7 @@ const DeductionTrainer = () => {
         <p className="question">{num1} - {num2} = ?</p>
       </div>
 
-      <div className="answer-area">
+      <div className="answer-area" onClick={() => inputRef.current?.focus()}>
         <input
           ref={inputRef}
           type="number"

@@ -41,6 +41,13 @@ const AdditionTrainer = () => {
     generateQuestion()
   }, [difficulty])
 
+  // Auto-focus input whenever it becomes enabled (after each question)
+  useEffect(() => {
+    if (!isAnswerLocked) {
+      inputRef.current?.focus()
+    }
+  }, [isAnswerLocked])
+
   // Play sounds
   const playCorrectSound = () => {
     try {
@@ -91,7 +98,6 @@ const AdditionTrainer = () => {
     setUserAnswer('')
     setResult({ message: '', type: '' })
     setIsAnswerLocked(false)
-    inputRef.current?.focus()
   }
 
   const checkAnswer = () => {
@@ -114,6 +120,7 @@ const AdditionTrainer = () => {
         message: `❌ Wrong! The answer was ${correct}`, 
         type: 'wrong' 
       })
+      inputRef.current?.focus()
     }
   }
 
@@ -153,7 +160,7 @@ const AdditionTrainer = () => {
         <p className="question">{num1} + {num2} = ?</p>
       </div>
 
-      <div className="answer-area">
+      <div className="answer-area" onClick={() => inputRef.current?.focus()}>
         <input
           ref={inputRef}
           type="number"
