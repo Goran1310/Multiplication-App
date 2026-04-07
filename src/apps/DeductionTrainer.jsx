@@ -15,8 +15,8 @@ const DeductionTrainer = () => {
   const audioContextRef = useRef(null)
 
   const difficultyLevels = {
-    easy: { max: 10, label: '🟢 Easy (1-10)' },
-    medium: { max: 0, label: '🟡 Medium (1-50)' },
+    easy: { max: 20, label: '🟢 Easy (1-20)' },
+    medium: { max: 50, label: '🟡 Medium (1-50)' },
     hard: { max: 100, label: '🔴 Hard (1-100)' }
   }
 
@@ -94,7 +94,7 @@ const DeductionTrainer = () => {
 
   const generateQuestion = () => {
     const max = difficultyLevels[difficulty].max
-    const n1 = Math.floor(Math.random() * max) + 1
+    const n1 = Math.floor(Math.random() * (max + 1))
     const n2 = Math.floor(Math.random() * n1) // Ensure n2 <= n1 for positive results
     
     setNum1(n1)
